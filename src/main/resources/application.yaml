@@ -18,3 +18,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+treasury:
+  api:
+    base-url: https://api.fiscaldata.treasury.gov

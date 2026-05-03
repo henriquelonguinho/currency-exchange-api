@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -16,14 +17,14 @@ import java.time.LocalDateTime;
 public class PurchaseTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(nullable = false, length = 50)
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;

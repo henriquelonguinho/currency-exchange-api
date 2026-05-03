@@ -1,15 +1,14 @@
 package com.currency.exchange.purchase.web;
 
 import com.currency.exchange.purchase.service.PurchaseTransactionService;
-import com.currency.exchange.purchase.web.dto.PurchaseTransactionRequest;
+import com.currency.exchange.purchase.web.dto.CreatePurchanseTransactionResponse;
+import com.currency.exchange.purchase.web.dto.CreatePurchaseTransactionRequest;
+import com.currency.exchange.purchase.web.dto.PurchaseTransactionResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/purchase-transaction")
@@ -23,9 +22,17 @@ public class PurchaseTransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid PurchaseTransactionRequest request) {
-        purchaseTransactionService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<CreatePurchanseTransactionResponse> create(@RequestBody @Valid CreatePurchaseTransactionRequest request) {
+        CreatePurchanseTransactionResponse response = purchaseTransactionService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PurchaseTransactionResponse> purchaseTransactionWithConversion(
+            @PathVariable String id,
+            @RequestParam(name = "currency") String currency) {
+        PurchaseTransactionResponse response = purchaseTransactionService.getPurchaseTransactionWithConversion(id, currency);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

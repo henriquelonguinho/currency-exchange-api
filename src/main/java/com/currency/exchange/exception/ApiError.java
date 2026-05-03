@@ -8,5 +8,5 @@ public record ApiError(
         int status,
         String error,
         String path,
-        List<String> messages
+        List<String> details
 ) {}
