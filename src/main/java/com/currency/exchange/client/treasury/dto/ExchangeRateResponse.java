@@ -1,4 +1,4 @@
-package com.currency.exchange.exchange.client.dto;
+package com.currency.exchange.client.treasury.dto;
 
 import java.util.List;
 

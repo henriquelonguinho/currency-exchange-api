@@ -1,6 +1,6 @@
-package com.currency.exchange.purchase.repository;
+package com.currency.exchange.repository;
 
-import com.currency.exchange.purchase.model.PurchaseTransaction;
+import com.currency.exchange.model.PurchaseTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

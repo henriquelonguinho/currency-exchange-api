@@ -1,4 +1,4 @@
-package com.currency.exchange.exchange.client.query;
+package com.currency.exchange.client.treasury.query;
 
 import java.util.ArrayList;
 import java.util.List;

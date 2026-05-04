@@ -1,4 +1,4 @@
-package com.currency.exchange.exchange.client.config;
+package com.currency.exchange.client.treasury.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

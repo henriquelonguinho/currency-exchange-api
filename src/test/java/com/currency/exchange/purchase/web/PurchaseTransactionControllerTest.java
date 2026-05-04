@@ -1,11 +1,11 @@
 package com.currency.exchange.purchase.web;
 
-import com.currency.exchange.exchange.client.TreasuryReportingRatesExchangeClient;
-import com.currency.exchange.exchange.client.dto.ExchangeRateData;
-import com.currency.exchange.exchange.client.dto.ExchangeRateResponse;
-import com.currency.exchange.exchange.client.query.FiscalDataQuery;
-import com.currency.exchange.purchase.model.PurchaseTransaction;
-import com.currency.exchange.purchase.repository.PurchaseTransactionRepository;
+import com.currency.exchange.client.treasury.TreasuryReportingRatesExchangeClient;
+import com.currency.exchange.client.treasury.dto.ExchangeRateData;
+import com.currency.exchange.client.treasury.dto.ExchangeRateResponse;
+import com.currency.exchange.client.treasury.query.FiscalDataQuery;
+import com.currency.exchange.model.PurchaseTransaction;
+import com.currency.exchange.repository.PurchaseTransactionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

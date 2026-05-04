@@ -21,4 +21,4 @@ spring:
 
 treasury:
   api:
-    base-url: https://api.fiscaldata.treasury.gov
+    base-url: https://api.fiscaldata.treasury.gov/services/api/fiscal_service

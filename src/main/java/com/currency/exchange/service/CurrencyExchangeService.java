@@ -1,10 +1,10 @@
-package com.currency.exchange.exchange.service;
+package com.currency.exchange.service;
 
-import com.currency.exchange.exchange.client.TreasuryReportingRatesExchangeClient;
-import com.currency.exchange.exchange.client.dto.ExchangeRateData;
-import com.currency.exchange.exchange.client.query.FiscalDataQuery;
-import com.currency.exchange.exchange.client.query.FiscalDataQuery.FilterOperator;
-import com.currency.exchange.exchange.client.query.FiscalDataQuery.SortDirection;
+import com.currency.exchange.client.treasury.TreasuryReportingRatesExchangeClient;
+import com.currency.exchange.client.treasury.dto.ExchangeRateData;
+import com.currency.exchange.client.treasury.query.FiscalDataQuery;
+import com.currency.exchange.client.treasury.query.FiscalDataQuery.FilterOperator;
+import com.currency.exchange.client.treasury.query.FiscalDataQuery.SortDirection;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -1,9 +1,9 @@
-package com.currency.exchange.purchase.web;
+package com.currency.exchange.controller;
 
-import com.currency.exchange.purchase.service.PurchaseTransactionService;
-import com.currency.exchange.purchase.web.dto.CreatePurchanseTransactionResponse;
-import com.currency.exchange.purchase.web.dto.CreatePurchaseTransactionRequest;
-import com.currency.exchange.purchase.web.dto.PurchaseTransactionResponse;
+import com.currency.exchange.service.PurchaseTransactionService;
+import com.currency.exchange.controller.dto.CreatePurchanseTransactionResponse;
+import com.currency.exchange.controller.dto.CreatePurchaseTransactionRequest;
+import com.currency.exchange.controller.dto.PurchaseTransactionResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

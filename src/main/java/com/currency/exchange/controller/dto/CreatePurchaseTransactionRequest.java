@@ -1,4 +1,4 @@
-package com.currency.exchange.purchase.web.dto;
+package com.currency.exchange.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;

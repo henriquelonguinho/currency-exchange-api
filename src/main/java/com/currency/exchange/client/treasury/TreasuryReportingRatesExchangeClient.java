@@ -1,7 +1,7 @@
-package com.currency.exchange.exchange.client;
+package com.currency.exchange.client.treasury;
 
-import com.currency.exchange.exchange.client.dto.ExchangeRateResponse;
-import com.currency.exchange.exchange.client.query.FiscalDataQuery;
+import com.currency.exchange.client.treasury.dto.ExchangeRateResponse;
+import com.currency.exchange.client.treasury.query.FiscalDataQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -9,7 +9,7 @@ import org.springframework.web.client.RestClient;
 public class TreasuryReportingRatesExchangeClient {
 
     private static final String RATES_OF_EXCHANGE_ENDPOINT =
-            "/services/api/fiscal_service/v1/accounting/od/rates_of_exchange";
+            "/v1/accounting/od/rates_of_exchange";
 
     private final RestClient treasuryRestClient;
 

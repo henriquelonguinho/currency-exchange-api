@@ -1,4 +1,4 @@
-package com.currency.exchange.purchase.model;
+package com.currency.exchange.model;
 
 import jakarta.persistence.*;
 import lombok.*;
