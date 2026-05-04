@@ -8,7 +8,6 @@ import com.currency.exchange.repository.PurchaseTransactionRepository;
 import com.currency.exchange.dto.CreatePurchaseTransactionResponse;
 import com.currency.exchange.dto.CreatePurchaseTransactionRequest;
 import com.currency.exchange.dto.PurchaseTransactionResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,7 +21,6 @@ public class PurchaseTransactionService {
     private final PurchaseTransactionRepository purchaseTransactionRepository;
     private final CurrencyExchangeService currencyExchangeService;
 
-    @Autowired
     public PurchaseTransactionService(
             PurchaseTransactionRepository purchaseTransactionRepository,
             CurrencyExchangeService currencyExchangeService) {

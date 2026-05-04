@@ -1,6 +1,7 @@
 package com.currency.exchange.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -18,8 +19,9 @@ public class CreatePurchaseTransactionRequest {
     @Size(max = 50, message = "Description must not exceed 50 characters")
     private String description;
 
-    @NotNull(message = "Date is required and must be in the format yyyy-MM-dd")
+    @NotNull(message = "Transaction date is required and must be in the format yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("transaction_date")
     private LocalDate date;
 
     @NotNull(message = "Amount is required")

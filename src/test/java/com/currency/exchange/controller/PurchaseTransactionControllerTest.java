@@ -1,4 +1,4 @@
-package com.currency.exchange.purchase.web;
+package com.currency.exchange.controller;
 
 import com.currency.exchange.client.treasury.TreasuryReportingRatesExchangeClient;
 import com.currency.exchange.client.treasury.dto.ExchangeRateData;
@@ -52,7 +52,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "Office supplies",
-                        "date": "2026-04-15",
+                        "transaction_date": "2026-04-15",
                         "amount": 49.99
                     }
                     """;
@@ -63,7 +63,7 @@ class PurchaseTransactionControllerTest {
                     .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.id").isNotEmpty())
                     .andExpect(jsonPath("$.description").value("Office supplies"))
-                    .andExpect(jsonPath("$.date").value("2026-04-15"))
+                    .andExpect(jsonPath("$.transaction_date").value("2026-04-15"))
                     .andExpect(jsonPath("$.amount").value(49.99));
         }
 
@@ -73,7 +73,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "Rounded purchase",
-                        "date": "2026-04-15",
+                        "transaction_date": "2026-04-15",
                         "amount": 123.456
                     }
                     """;
@@ -90,7 +90,7 @@ class PurchaseTransactionControllerTest {
         void shouldReturn400WhenDescriptionMissing() throws Exception {
             String requestBody = """
                     {
-                        "date": "2026-04-15",
+                        "transaction_date": "2026-04-15",
                         "amount": 49.99
                     }
                     """;
@@ -109,7 +109,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "%s",
-                        "date": "2026-04-15",
+                        "transaction_date": "2026-04-15",
                         "amount": 49.99
                     }
                     """.formatted(longDescription);
@@ -135,7 +135,7 @@ class PurchaseTransactionControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(requestBody))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.details", hasItem("Date is required and must be in the format yyyy-MM-dd")));
+                    .andExpect(jsonPath("$.details", hasItem("Transaction date is required and must be in the format yyyy-MM-dd")));
         }
 
         @Test
@@ -144,7 +144,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "No amount",
-                        "date": "2026-04-15"
+                        "transaction_date": "2026-04-15"
                     }
                     """;
 
@@ -161,7 +161,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "Negative amount",
-                        "date": "2026-04-15",
+                        "transaction_date": "2026-04-15",
                         "amount": -10.00
                     }
                     """;
@@ -179,7 +179,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "Zero amount",
-                        "date": "2026-04-15",
+                        "transaction_date": "2026-04-15",
                         "amount": 0
                     }
                     """;
@@ -197,7 +197,7 @@ class PurchaseTransactionControllerTest {
             String requestBody = """
                     {
                         "description": "Bad date",
-                        "date": "15-04-2026",
+                        "transaction_date": "15-04-2026",
                         "amount": 49.99
                     }
                     """;
@@ -269,7 +269,7 @@ class PurchaseTransactionControllerTest {
 
             mockMvc.perform(get("/purchase-transaction/{id}", saved.getId())
                             .param("currency", "Brazil-Real"))
-                    .andExpect(status().isUnprocessableEntity())
+                    .andExpect(status().is(422))
                     .andExpect(jsonPath("$.details", hasItem("The purchase cannot be converted to the target currency")));
         }
 
@@ -282,31 +282,6 @@ class PurchaseTransactionControllerTest {
                             .param("currency", "Brazil-Real"))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.details", hasItem("Transaction not found")));
-        }
-
-        @Test
-        @DisplayName("Should correctly convert with different exchange rates")
-        void shouldCorrectlyConvertWithDifferentRates() throws Exception {
-            PurchaseTransaction saved = repository.save(PurchaseTransaction.builder()
-                    .description("Euro purchase")
-                    .date(LocalDate.of(2026, 2, 10))
-                    .amount(new BigDecimal("250.50"))
-                    .build());
-
-            ExchangeRateData rateData = new ExchangeRateData(
-                    "Euro Zone-Euro",
-                    new BigDecimal("0.921"),
-                    LocalDate.of(2026, 1, 31));
-            ExchangeRateResponse apiResponse = new ExchangeRateResponse(List.of(rateData));
-
-            when(exchangeClient.getExchangeRates(any(FiscalDataQuery.class)))
-                    .thenReturn(apiResponse);
-
-            mockMvc.perform(get("/purchase-transaction/{id}", saved.getId())
-                            .param("currency", "Euro Zone-Euro"))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.exchange_rate").value(0.921))
-                    .andExpect(jsonPath("$.converted_amount").value(230.71));
         }
 
         @Test

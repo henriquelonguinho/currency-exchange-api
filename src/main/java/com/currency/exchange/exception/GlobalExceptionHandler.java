@@ -3,8 +3,11 @@ package com.currency.exchange.exception;
 import com.currency.exchange.exception.custom.BusinessException;
 import com.currency.exchange.exception.custom.CurrencyConversionException;
 import com.currency.exchange.exception.custom.TransactionNotFoundException;
+import com.currency.exchange.exception.custom.TreasuryApiClientException;
 import com.currency.exchange.exception.custom.TreasuryApiUnavailableException;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -124,7 +127,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(TransactionNotFoundException.class)
-    public ResponseEntity<ApiError> handleTransactionNotFoundException(BusinessException ex, WebRequest request) {
+    public ResponseEntity<ApiError> handleTransactionNotFoundException(TransactionNotFoundException ex, WebRequest request) {
         ApiError apiError = new ApiError(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
@@ -133,6 +136,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 List.of(ex.getMessage())
         );
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TreasuryApiClientException.class)
+    public ResponseEntity<ApiError> handleTreasuryApiClientException(TreasuryApiClientException ex, WebRequest request) {
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                HttpStatus.BAD_GATEWAY.value(),
+                "Bad Gateway",
+                getPath(request),
+                List.of(ex.getMessage())
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_GATEWAY);
     }
 
     @ExceptionHandler(TreasuryApiUnavailableException.class)
@@ -145,6 +160,35 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 List.of(ex.getMessage())
         );
         return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                getPath(request),
+                List.of(ex.getMessage())
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
+        List<String> messages = ex.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .toList();
+
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                getPath(request),
+                messages
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     private String getPath(WebRequest request) {

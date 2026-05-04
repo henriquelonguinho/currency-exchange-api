@@ -1,16 +1,14 @@
-package com.currency.exchange.purchase.service;
+package com.currency.exchange.service;
 
 import com.currency.exchange.exception.custom.BusinessException;
 import com.currency.exchange.exception.custom.CurrencyConversionException;
 import com.currency.exchange.exception.custom.TransactionNotFoundException;
 import com.currency.exchange.client.treasury.dto.ExchangeRateData;
-import com.currency.exchange.service.CurrencyExchangeService;
 import com.currency.exchange.model.PurchaseTransaction;
 import com.currency.exchange.repository.PurchaseTransactionRepository;
 import com.currency.exchange.dto.CreatePurchaseTransactionResponse;
 import com.currency.exchange.dto.CreatePurchaseTransactionRequest;
 import com.currency.exchange.dto.PurchaseTransactionResponse;
-import com.currency.exchange.service.PurchaseTransactionService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

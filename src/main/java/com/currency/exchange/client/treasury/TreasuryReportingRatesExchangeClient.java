@@ -2,6 +2,7 @@ package com.currency.exchange.client.treasury;
 
 import com.currency.exchange.client.treasury.dto.ExchangeRateResponse;
 import com.currency.exchange.client.treasury.query.FiscalDataQuery;
+import com.currency.exchange.exception.custom.TreasuryApiClientException;
 import com.currency.exchange.exception.custom.TreasuryApiUnavailableException;
 
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 
 @Component
 public class TreasuryReportingRatesExchangeClient {
@@ -36,11 +37,19 @@ public class TreasuryReportingRatesExchangeClient {
                     .retrieve()
                     .body(ExchangeRateResponse.class);
         } catch (ResourceAccessException ex) {
-            log.error("Treasury API is unreachable: {}", ex.getMessage());
-            throw new TreasuryApiUnavailableException("Treasury exchange rate service is currently unavailable", ex);
-        } catch (RestClientException ex) {
-            log.error("Error calling Treasury API: {}", ex.getMessage());
-            throw new TreasuryApiUnavailableException("Failed to retrieve exchange rates from Treasury", ex);
+            log.error("Treasury API is unreachable (timeout/connection refused): {}", ex.getMessage());
+            throw new TreasuryApiUnavailableException(
+                    "Treasury exchange rate service is currently unavailable", ex);
+        } catch (RestClientResponseException ex) {
+            int status = ex.getStatusCode().value();
+            if (status >= 400 && status < 500) {
+                log.warn("Treasury API returned client error {}: {}", status, ex.getResponseBodyAsString());
+                throw new TreasuryApiClientException(
+                        "Treasury API rejected the request (HTTP %d)".formatted(status), ex);
+            }
+            log.error("Treasury API returned server error {}: {}", status, ex.getResponseBodyAsString());
+            throw new TreasuryApiUnavailableException(
+                    "Treasury exchange rate service returned an error (HTTP %d)".formatted(status), ex);
         }
     }
 }

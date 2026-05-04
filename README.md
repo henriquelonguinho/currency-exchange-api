@@ -65,16 +65,16 @@ POST /purchase-transaction
 ```json
 {
   "description": "Office supplies",
-  "date": "2026-04-15",
+  "transaction_date": "2026-04-15",
   "amount": 49.99
 }
 ```
 
-| Field         | Type    | Rules                              |
-|---------------|---------|------------------------------------|
-| `description` | string  | Required. Max 50 characters.       |
-| `date`        | string  | Required. Format `yyyy-MM-dd`.     |
-| `amount`      | number  | Required. Must be positive.        |
+| Field              | Type    | Rules                              |
+|--------------------|---------|------------------------------------|
+| `description`      | string  | Required. Max 50 characters.       |
+| `transaction_date` | string  | Required. Format `yyyy-MM-dd`.     |
+| `amount`           | number  | Required. Must be positive.        |
 
 **Response (201 Created):**
 
@@ -82,7 +82,7 @@ POST /purchase-transaction
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "description": "Office supplies",
-  "date": "2026-04-15",
+  "transaction_date": "2026-04-15",
   "amount": 49.99
 }
 ```

@@ -12,19 +12,20 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/purchase-transaction")
+@Validated
 @Tag(name = "Purchase Transactions", description = "Store and retrieve purchase transactions with currency conversion")
 public class PurchaseTransactionController {
 
     private final PurchaseTransactionService purchaseTransactionService;
 
-    @Autowired
     public PurchaseTransactionController(PurchaseTransactionService purchaseTransactionService) {
         this.purchaseTransactionService = purchaseTransactionService;
     }
@@ -62,7 +63,7 @@ public class PurchaseTransactionController {
             @Parameter(description = "UUID of the purchase transaction", example = "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
             @PathVariable String id,
             @Parameter(description = "Target currency as listed by the Treasury API", example = "Brazil-Real")
-            @RequestParam(name = "currency") String currency) {
+            @RequestParam(name = "currency") @NotBlank(message = "Currency must not be blank") String currency) {
         PurchaseTransactionResponse response = purchaseTransactionService.getPurchaseTransactionWithConversion(id, currency);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
