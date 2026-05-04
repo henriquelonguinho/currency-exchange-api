@@ -254,8 +254,8 @@ class PurchaseTransactionControllerTest {
         }
 
         @Test
-        @DisplayName("Should return 400 when no exchange rate is found within 6 months")
-        void shouldReturn400WhenNoExchangeRateFound() throws Exception {
+        @DisplayName("Should return 422 when no exchange rate is found within 6 months")
+        void shouldReturn422WhenNoExchangeRateFound() throws Exception {
             PurchaseTransaction saved = repository.save(PurchaseTransaction.builder()
                     .description("Old purchase")
                     .date(LocalDate.of(2026, 3, 15))
@@ -269,18 +269,18 @@ class PurchaseTransactionControllerTest {
 
             mockMvc.perform(get("/purchase-transaction/{id}", saved.getId())
                             .param("currency", "Brazil-Real"))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isUnprocessableEntity())
                     .andExpect(jsonPath("$.details", hasItem("The purchase cannot be converted to the target currency")));
         }
 
         @Test
-        @DisplayName("Should return 400 when transaction is not found")
-        void shouldReturn400WhenTransactionNotFound() throws Exception {
+        @DisplayName("Should return 404 when transaction is not found")
+        void shouldReturn404WhenTransactionNotFound() throws Exception {
             String fakeId = "00000000-0000-0000-0000-000000000000";
 
             mockMvc.perform(get("/purchase-transaction/{id}", fakeId)
                             .param("currency", "Brazil-Real"))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.details", hasItem("Transaction not found")));
         }
 

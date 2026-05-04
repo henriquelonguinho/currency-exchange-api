@@ -7,7 +7,7 @@ import com.currency.exchange.client.treasury.dto.ExchangeRateData;
 import com.currency.exchange.service.CurrencyExchangeService;
 import com.currency.exchange.model.PurchaseTransaction;
 import com.currency.exchange.repository.PurchaseTransactionRepository;
-import com.currency.exchange.controller.dto.CreatePurchanseTransactionResponse;
+import com.currency.exchange.controller.dto.CreatePurchaseTransactionResponse;
 import com.currency.exchange.controller.dto.CreatePurchaseTransactionRequest;
 import com.currency.exchange.controller.dto.PurchaseTransactionResponse;
 import com.currency.exchange.service.PurchaseTransactionService;
@@ -66,7 +66,7 @@ class PurchaseTransactionServiceTest {
             when(purchaseTransactionRepository.save(any(PurchaseTransaction.class)))
                     .thenReturn(saved);
 
-            CreatePurchanseTransactionResponse response = purchaseTransactionService.create(request);
+            CreatePurchaseTransactionResponse response = purchaseTransactionService.create(request);
 
             assertThat(response.id()).isEqualTo(generatedId.toString());
             assertThat(response.description()).isEqualTo("Office supplies");
@@ -94,7 +94,7 @@ class PurchaseTransactionServiceTest {
             when(purchaseTransactionRepository.save(any(PurchaseTransaction.class)))
                     .thenReturn(saved);
 
-            CreatePurchanseTransactionResponse response = purchaseTransactionService.create(request);
+            CreatePurchaseTransactionResponse response = purchaseTransactionService.create(request);
 
             assertThat(response.amount()).isEqualByComparingTo("123.46");
         }

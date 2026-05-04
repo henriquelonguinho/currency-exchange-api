@@ -1,6 +1,10 @@
 package com.currency.exchange.exception;
 
 import com.currency.exchange.exception.custom.BusinessException;
+import com.currency.exchange.exception.custom.CurrencyConversionException;
+import com.currency.exchange.exception.custom.TransactionNotFoundException;
+import com.currency.exchange.exception.custom.TreasuryApiUnavailableException;
+
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final HttpStatusCode UNPROCESSABLE_ENTITY = HttpStatusCode.valueOf(422);
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
@@ -103,6 +109,42 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 List.of(ex.getMessage())
         );
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CurrencyConversionException.class)
+    public ResponseEntity<ApiError> handleCurrencyConversionException(CurrencyConversionException ex, WebRequest request) {
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                UNPROCESSABLE_ENTITY.value(),
+                "Unprocessable Entity",
+                getPath(request),
+                List.of(ex.getMessage())
+        );
+        return new ResponseEntity<>(apiError, UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<ApiError> handleTransactionNotFoundException(BusinessException ex, WebRequest request) {
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "Not Found",
+                getPath(request),
+                List.of(ex.getMessage())
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TreasuryApiUnavailableException.class)
+    public ResponseEntity<ApiError> handleTreasuryApiUnavailable(TreasuryApiUnavailableException ex, WebRequest request) {
+        ApiError apiError = new ApiError(
+                LocalDateTime.now(),
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                "Service Unavailable",
+                getPath(request),
+                List.of(ex.getMessage())
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     private String getPath(WebRequest request) {

@@ -5,7 +5,7 @@ import com.currency.exchange.exception.custom.CurrencyConversionException;
 import com.currency.exchange.exception.custom.TransactionNotFoundException;
 import com.currency.exchange.model.PurchaseTransaction;
 import com.currency.exchange.repository.PurchaseTransactionRepository;
-import com.currency.exchange.controller.dto.CreatePurchanseTransactionResponse;
+import com.currency.exchange.controller.dto.CreatePurchaseTransactionResponse;
 import com.currency.exchange.controller.dto.CreatePurchaseTransactionRequest;
 import com.currency.exchange.controller.dto.PurchaseTransactionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class PurchaseTransactionService {
         this.currencyExchangeService = currencyExchangeService;
     }
 
-    public CreatePurchanseTransactionResponse create(CreatePurchaseTransactionRequest request) {
+    public CreatePurchaseTransactionResponse create(CreatePurchaseTransactionRequest request) {
         PurchaseTransaction purchaseTransaction = PurchaseTransaction.builder()
                 .description(request.getDescription())
                 .date(request.getDate())
@@ -38,7 +38,7 @@ public class PurchaseTransactionService {
                 .build();
 
         var savedTransaction = purchaseTransactionRepository.save(purchaseTransaction);
-        return new CreatePurchanseTransactionResponse(
+        return new CreatePurchaseTransactionResponse(
           savedTransaction.getId().toString(),
           savedTransaction.getDescription(),
           savedTransaction.getDate(),
@@ -47,7 +47,7 @@ public class PurchaseTransactionService {
     }
 
     public PurchaseTransactionResponse getPurchaseTransactionWithConversion(String id, String currency) {
-        PurchaseTransaction purchaseTransaction = getPuchaseTransaction(id);
+        PurchaseTransaction purchaseTransaction = getPurchaseTransaction(id);
         LocalDate minimumDate = purchaseTransaction.getDate().minusMonths(6);
         LocalDate maximumDate = purchaseTransaction.getDate();
         var exchangeData = currencyExchangeService.getExchangeRateByCurrencyAndDate(currency, minimumDate, maximumDate);
@@ -66,7 +66,7 @@ public class PurchaseTransactionService {
                 .build();
     }
 
-    public PurchaseTransaction getPuchaseTransaction(String id) {
+    public PurchaseTransaction getPurchaseTransaction(String id) {
         return purchaseTransactionRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new TransactionNotFoundException("Transaction not found"));
     }
