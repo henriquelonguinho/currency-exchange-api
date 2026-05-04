@@ -2,9 +2,9 @@ package com.currency.exchange.controller;
 
 import com.currency.exchange.exception.ApiError;
 import com.currency.exchange.service.PurchaseTransactionService;
-import com.currency.exchange.controller.dto.CreatePurchaseTransactionResponse;
-import com.currency.exchange.controller.dto.CreatePurchaseTransactionRequest;
-import com.currency.exchange.controller.dto.PurchaseTransactionResponse;
+import com.currency.exchange.dto.CreatePurchaseTransactionResponse;
+import com.currency.exchange.dto.CreatePurchaseTransactionRequest;
+import com.currency.exchange.dto.PurchaseTransactionResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

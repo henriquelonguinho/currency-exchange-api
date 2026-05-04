@@ -1,4 +1,4 @@
-package com.currency.exchange.controller.dto;
+package com.currency.exchange.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

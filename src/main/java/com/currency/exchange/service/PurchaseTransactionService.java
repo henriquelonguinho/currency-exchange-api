@@ -5,9 +5,9 @@ import com.currency.exchange.exception.custom.CurrencyConversionException;
 import com.currency.exchange.exception.custom.TransactionNotFoundException;
 import com.currency.exchange.model.PurchaseTransaction;
 import com.currency.exchange.repository.PurchaseTransactionRepository;
-import com.currency.exchange.controller.dto.CreatePurchaseTransactionResponse;
-import com.currency.exchange.controller.dto.CreatePurchaseTransactionRequest;
-import com.currency.exchange.controller.dto.PurchaseTransactionResponse;
+import com.currency.exchange.dto.CreatePurchaseTransactionResponse;
+import com.currency.exchange.dto.CreatePurchaseTransactionRequest;
+import com.currency.exchange.dto.PurchaseTransactionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
