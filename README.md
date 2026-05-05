@@ -28,7 +28,11 @@ REST API that stores purchase transactions in US dollars and retrieves them with
 
 The application starts on `http://localhost:8080` with an in-memory H2 database.
 
-The H2 console is available at `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:currency_exchange`).
+The H2 console is available at `http://localhost:8080/h2-console`. Use the following JDBC URL to connect:
+
+```
+jdbc:h2:mem:currency_exchange
+```
 
 ## API Documentation (Swagger)
 
@@ -192,12 +196,20 @@ V2__add_some_column.sql
 
 Flyway runs automatically on application startup. Hibernate is set to `validate` only — it checks that entities match the schema but never modifies it.
 
+## CI/CD
+
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push and pull request to `main`:
+
+1. Builds the project and runs all tests (`./mvnw verify`)
+2. Builds the Docker image to validate the Dockerfile
+
+For CD (Continuous Deployment), the application is container-ready. To complete the pipeline, choose a hosting provider (e.g. AWS ECS, Railway, Fly.io) and add a deploy job that pushes the image to a registry and triggers a deployment.
+
 ## Project Structure
 
 ```
 src/main/java/com/currency/exchange/
-├── client/treasury/          # Treasury API integration (RestClient, DTOs, query builder)
-├── config/                   # Application configuration (RestClient timeouts)
+├── client/treasury/          # Treasury API integration (RestClient, config, DTOs, query builder)
 ├── controller/               # REST controllers
 ├── dto/                      # Request and response DTOs
 ├── exception/                # Global exception handler and custom exceptions
