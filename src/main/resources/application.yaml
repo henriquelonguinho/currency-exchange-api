@@ -24,6 +24,9 @@ treasury:
     base-url: https://api.fiscaldata.treasury.gov/services/api/fiscal_service
     connect-timeout: 5s
     read-timeout: 10s
+    cache:
+      ttl: 12h
+      max-size: 500
 
 springdoc:
   api-docs:

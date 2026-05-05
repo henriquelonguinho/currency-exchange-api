@@ -5,6 +5,10 @@ import com.currency.exchange.client.treasury.dto.ExchangeRateData;
 import com.currency.exchange.client.treasury.query.FiscalDataQuery;
 import com.currency.exchange.client.treasury.query.FiscalDataQuery.FilterOperator;
 import com.currency.exchange.client.treasury.query.FiscalDataQuery.SortDirection;
+import com.currency.exchange.service.cache.ExchangeRateCacheKey;
+import com.github.benmanes.caffeine.cache.Cache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,13 +19,29 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class CurrencyExchangeService {
 
-    private final TreasuryReportingRatesExchangeClient exchangeClient;
+    private static final Logger log = LoggerFactory.getLogger(CurrencyExchangeService.class);
 
-    public CurrencyExchangeService(TreasuryReportingRatesExchangeClient exchangeClient) {
+    private final TreasuryReportingRatesExchangeClient exchangeClient;
+    private final Cache<ExchangeRateCacheKey, ExchangeRateData> exchangeRateCache;
+
+    public CurrencyExchangeService(
+            TreasuryReportingRatesExchangeClient exchangeClient,
+            Cache<ExchangeRateCacheKey, ExchangeRateData> exchangeRateCache) {
         this.exchangeClient = exchangeClient;
+        this.exchangeRateCache = exchangeRateCache;
     }
 
     public ExchangeRateData getExchangeRateByCurrencyAndDate(String currency, LocalDate minimumDate, LocalDate maximumDate) {
+        ExchangeRateCacheKey cacheKey = new ExchangeRateCacheKey(currency, maximumDate);
+
+        return exchangeRateCache.get(cacheKey, key -> {
+            log.info("Cache miss for currency={}, transactionDate={}. Fetching from Treasury API.",
+                    key.currency(), key.transactionDate());
+            return fetchExchangeRate(key.currency(), minimumDate, maximumDate);
+        });
+    }
+
+    private ExchangeRateData fetchExchangeRate(String currency, LocalDate minimumDate, LocalDate maximumDate) {
         String dateFrom = minimumDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
         String dateTo = maximumDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
 

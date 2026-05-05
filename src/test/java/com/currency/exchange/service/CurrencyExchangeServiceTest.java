@@ -3,11 +3,14 @@ package com.currency.exchange.service;
 import com.currency.exchange.client.treasury.TreasuryReportingRatesExchangeClient;
 import com.currency.exchange.client.treasury.dto.ExchangeRateData;
 import com.currency.exchange.client.treasury.dto.ExchangeRateResponse;
+import com.currency.exchange.service.cache.ExchangeRateCacheKey;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -26,8 +29,13 @@ class CurrencyExchangeServiceTest {
     @Mock
     private TreasuryReportingRatesExchangeClient exchangeClient;
 
-    @InjectMocks
     private CurrencyExchangeService currencyExchangeService;
+
+    @BeforeEach
+    void setUp() {
+        Cache<ExchangeRateCacheKey, ExchangeRateData> cache = Caffeine.newBuilder().build();
+        currencyExchangeService = new CurrencyExchangeService(exchangeClient, cache);
+    }
 
     @Nested
     @DisplayName("getExchangeRateByCurrencyAndDate")

@@ -11,6 +11,7 @@ REST API that stores purchase transactions in US dollars and retrieves them with
 - Spring Actuator
 - SpringDoc OpenAPI (Swagger UI)
 - Flyway (database migrations)
+- Caffeine (in-memory cache)
 - Maven
 - Docker
 
@@ -138,6 +139,12 @@ All errors follow a consistent format:
 | 422    | Currency conversion not possible (no rate available). |
 | 502    | Treasury API rejected the request (4xx from upstream).|
 | 503    | Treasury API is unavailable (timeout, server error).  |
+
+## Exchange Rate Cache
+
+Exchange rates fetched from the Treasury API are cached in-memory using Caffeine. The cache key is the combination of `currency` and `transaction_date`, so repeated conversions for the same transaction return instantly without calling the external API.
+
+TTL and max cache size are configurable via `application.yaml` under `treasury.api.cache`. The Treasury publishes rates quarterly (March, June, September, December) with possible amendments when a currency varies 10% or more.
 
 ## Docker
 

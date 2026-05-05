@@ -18,6 +18,8 @@ import java.util.UUID;
 @Service
 public class PurchaseTransactionService {
 
+    private static final int EXCHANGE_RATE_LOOKBACK_MONTHS = 6;
+
     private final PurchaseTransactionRepository purchaseTransactionRepository;
     private final CurrencyExchangeService currencyExchangeService;
 
@@ -46,7 +48,7 @@ public class PurchaseTransactionService {
 
     public PurchaseTransactionResponse getPurchaseTransactionWithConversion(String id, String currency) {
         PurchaseTransaction purchaseTransaction = getPurchaseTransaction(id);
-        LocalDate minimumDate = purchaseTransaction.getDate().minusMonths(6);
+        LocalDate minimumDate = purchaseTransaction.getDate().minusMonths(EXCHANGE_RATE_LOOKBACK_MONTHS);
         LocalDate maximumDate = purchaseTransaction.getDate();
         var exchangeData = currencyExchangeService.getExchangeRateByCurrencyAndDate(currency, minimumDate, maximumDate);
         if (exchangeData == null) {
