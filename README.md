@@ -93,10 +93,10 @@ POST /purchase-transaction
 GET /purchase-transaction/{id}?currency={currency}
 ```
 
-| Parameter  | Type   | Description                                                        |
-|------------|--------|--------------------------------------------------------------------|
-| `id`       | path   | UUID of the purchase transaction.                                  |
-| `currency` | query  | Target currency as listed by the Treasury API (e.g. `Brazil-Real`).|
+| Parameter  | Type   | Description                                                         |
+|------------|--------|---------------------------------------------------------------------|
+| `id`       | path   | UUID of the purchase transaction.                                   |
+| `currency` | query  | Required. Target currency as listed by the Treasury API (e.g. `Brazil-Real`). Must not be blank.|
 
 The API looks for an exchange rate within 6 months prior to the transaction date. If no rate is found, it returns an error.
 
@@ -129,10 +129,11 @@ All errors follow a consistent format:
 
 | Status | Scenario                                              |
 |--------|-------------------------------------------------------|
-| 400    | Validation errors, invalid input format.              |
+| 400    | Validation errors, invalid input format, invalid UUID.|
 | 404    | Transaction not found.                                |
 | 422    | Currency conversion not possible (no rate available). |
-| 503    | Treasury API is unavailable.                          |
+| 502    | Treasury API rejected the request (4xx from upstream).|
+| 503    | Treasury API is unavailable (timeout, server error).  |
 
 ## Docker
 
@@ -169,6 +170,8 @@ The container runs with the `prod` profile, which:
 - Stores the database file in a Docker volume (`h2-data`)
 - Disables the H2 console and Swagger UI
 - Exposes only `health`, `info`, and `metrics` Actuator endpoints
+- Outputs logs in structured JSON format (ECS) for log aggregation tools
+- Sets log levels to INFO for application code and WARN for Spring internals
 
 ### Health Check
 
@@ -194,7 +197,9 @@ Flyway runs automatically on application startup. Hibernate is set to `validate`
 ```
 src/main/java/com/currency/exchange/
 ├── client/treasury/          # Treasury API integration (RestClient, DTOs, query builder)
-├── controller/               # REST controllers and request/response DTOs
+├── config/                   # Application configuration (RestClient timeouts)
+├── controller/               # REST controllers
+├── dto/                      # Request and response DTOs
 ├── exception/                # Global exception handler and custom exceptions
 ├── model/                    # JPA entities
 ├── repository/               # Spring Data repositories

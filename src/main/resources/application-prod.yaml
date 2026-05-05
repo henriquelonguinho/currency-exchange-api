@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:file:/app/data/currency_exchange
+    url: ${DB_URL:jdbc:h2:file:/app/data/currency_exchange}
     driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
 
   jpa:
     hibernate:
@@ -28,3 +28,11 @@ springdoc:
     enabled: false
   swagger-ui:
     enabled: false
+
+logging:
+  structured:
+    format:
+      console: ecs
+  level:
+    com.currency.exchange: INFO
+    org.springframework: WARN
